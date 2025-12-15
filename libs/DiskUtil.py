@@ -1,5 +1,5 @@
 from PIL import Image
-from duckduckgo_search import DDGS
+import ddgs
 from pathlib import Path
 import io
 import os
@@ -65,7 +65,7 @@ def _download_thumbnails(search_query, max_thumbnails=12):
   if temp_directory.exists():
     shutil.rmtree(temp_directory)
 
-  results = DDGS().images(search_query, max_results=max_thumbnails)
+  results = ddgs.DDGS().images(query=search_query, max_results=max_thumbnails)
   
   os.makedirs(temp_directory)
   for img in results:
