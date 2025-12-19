@@ -204,6 +204,16 @@
          </widget>
         </item>
         <item>
+         <widget class="QPushButton" name="bulkThumbnailDownloadButton">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="text">
+           <string>Bulk Replace</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="thumbnailRestoreButton">
           <property name="enabled">
            <bool>false</bool>

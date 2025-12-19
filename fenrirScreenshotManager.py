@@ -256,6 +256,7 @@ class MainWindow(main_base, main_form):
   def setEvents(self):
     self.gameList.itemSelectionChanged.connect(self.gameSelectionChanged)
     self.thumbnailDownloadButton.clicked.connect(self.replaceGameCover)
+    self.bulkThumbnailDownloadButton.clicked.connect(self.bulkReplaceCover)
     self.thumbnailRestoreButton.clicked.connect(self.restoreGameCover)
     self.thumbnailRemoveButton.clicked.connect(self.removeGameCover)
     self.writeImagesButton.clicked.connect(self.writeImages)
@@ -352,6 +353,27 @@ class MainWindow(main_base, main_form):
       output_name = disk_util.getScreenshotsTempFolder() / Path('{}.jpg'.format(game_name))
       img.save(output_name, 'JPEG', quality=100)
       self.setThumbnailToFile(output_name)
+
+  def bulkReplaceCover(self):
+    selection  = [self.gameList.item(x) for x in range(self.gameList.count())]
+    did_something_changed = False
+    for game in selection:
+      if not did_something_changed:
+        did_something_changed = True
+      game_name = game.text()
+      if not disk_util.get_thumbnail(game_name):
+        results = ResultsWindow(disk_util.cleanName(game_name))
+        selected_cover = results.exec()
+        if selected_cover:
+          img = Image.open(selected_cover)
+          img = img.resize((128, 96))
+          output_name = disk_util.getScreenshotsTempFolder() / Path('{}.jpg'.format(game_name))
+          img.save(output_name, 'JPEG', quality=100)
+          self.setThumbnailToFile(output_name)
+    if did_something_changed:
+      QMessageBox.information(self, 'Complete', 'All covers downloaded')
+    else:
+      QMessageBox.information(self, 'Complete', 'Nothing to download')
 
   def gameSelectionChanged(self):
     selection = self.gameList.selectedItems()
